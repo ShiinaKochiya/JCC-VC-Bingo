@@ -1,0 +1,113 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: var(--font-dm-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+:root {
+  --bg: #ecfdf5;
+  --surface: #ffffff;
+  --tile: #ffffff;
+  --tile-marked: #99f6e4;
+  --accent: #0d9488;
+  --accent-hover: #0f766e;
+  --text: #134e4a;
+  --text-muted: #5eead4;
+  --border: #99f6e4;
+  --banner-bg: rgba(13, 148, 136, 0.92);
+  --banner-text: #ffffff;
+  --shadow: rgba(19, 78, 74, 0.12);
+}
+
+:root[data-theme="dark"] {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --tile: #334155;
+  --tile-marked: #164e63;
+  --accent: #22d3ee;
+  --accent-hover: #06b6d4;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --border: #475569;
+  --banner-bg: rgba(34, 211, 238, 0.9);
+  --banner-text: #0f172a;
+  --shadow: rgba(0, 0, 0, 0.35);
+}
+
+:root[data-theme="white"] {
+  --bg: #f8fafc;
+  --surface: #ffffff;
+  --tile: #ffffff;
+  --tile-marked: #e2e8f0;
+  --accent: #334155;
+  --accent-hover: #1e293b;
+  --text: #0f172a;
+  --text-muted: #64748b;
+  --border: #cbd5e1;
+  --banner-bg: rgba(51, 65, 85, 0.92);
+  --banner-text: #ffffff;
+  --shadow: rgba(15, 23, 42, 0.08);
+}
+
+:root[data-theme="pink"] {
+  --bg: #fdf2f8;
+  --surface: #fff1f2;
+  --tile: #ffffff;
+  --tile-marked: #fbcfe8;
+  --accent: #db2777;
+  --accent-hover: #be185d;
+  --text: #831843;
+  --text-muted: #f472b6;
+  --border: #f9a8d4;
+  --banner-bg: rgba(219, 39, 119, 0.92);
+  --banner-text: #ffffff;
+  --shadow: rgba(131, 24, 67, 0.12);
+}
+
+:root[data-theme="ocean"] {
+  --bg: #0c4a6e;
+  --surface: #075985;
+  --tile: #e0f2fe;
+  --tile-marked: #7dd3fc;
+  --accent: #fbbf24;
+  --accent-hover: #f59e0b;
+  --text: #082f49;
+  --text-muted: #bae6fd;
+  --border: #38bdf8;
+  --banner-bg: rgba(251, 191, 36, 0.95);
+  --banner-text: #082f49;
+  --shadow: rgba(8, 47, 73, 0.25);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+@keyframes fade-in-down {
+  from {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-down {
+  animation: fade-in-down 0.35s ease-out;
+}
