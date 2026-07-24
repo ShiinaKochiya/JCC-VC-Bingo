@@ -36,6 +36,23 @@ const WINNING_LINES: number[][] = [
   [4, 8, 12, 16, 20],
 ];
 
+export function normalizeEntries(raw: unknown): string[] {
+  if (Array.isArray(raw)) {
+    return raw.filter((entry): entry is string => typeof entry === "string");
+  }
+
+  if (typeof raw !== "object" || raw === null) {
+    return [];
+  }
+
+  const entries = (raw as { entries?: unknown }).entries;
+  if (!Array.isArray(entries)) {
+    return [];
+  }
+
+  return entries.filter((entry): entry is string => typeof entry === "string");
+}
+
 export function validateBingoData(raw: unknown): ValidationResult {
   if (typeof raw !== "object" || raw === null) {
     return { ok: false, error: "JSON must be an object with an entries array." };
@@ -73,6 +90,10 @@ function shuffle<T>(items: T[]): T[] {
 }
 
 export function pickRandomEntries(pool: string[], count = 24): string[] {
+  if (pool.length <= count) {
+    return shuffle(pool);
+  }
+
   return shuffle(pool).slice(0, count);
 }
 

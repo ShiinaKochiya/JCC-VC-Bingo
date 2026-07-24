@@ -11,12 +11,11 @@ import {
   createLockedMarkedState,
   getWinningLineIndexes,
   hasBingo,
-  parseBingoJson,
+  normalizeEntries,
   toggleTileMark,
   type BoardState,
 } from "@/lib/bingo";
 import { exportBoardAsPng } from "@/lib/exportBoard";
-import { loadSessionState, saveSessionState } from "@/lib/session";
 import {
   applyTheme,
   DEFAULT_THEME,
@@ -52,14 +51,14 @@ export default function HomePage() {
   );
 
   const handleLoadEntries = useCallback(() => {
-    const result = parseBingoJson(JSON.stringify(entriesData));
+    const loadedEntries = normalizeEntries(entriesData);
 
-    if (!result.ok) {
-      setError(result.error);
+    if (loadedEntries.length < 24) {
+      setError(`Need at least 24 entries (found ${loadedEntries.length}).`);
       return;
     }
 
-    initializeBoard(result.data.entries, "entries.json");
+    initializeBoard(loadedEntries, "entries.json");
   }, [initializeBoard]);
 
   useEffect(() => {
@@ -67,41 +66,10 @@ export default function HomePage() {
     setTheme(storedTheme);
     applyTheme(storedTheme);
 
-    const session = loadSessionState();
-    if (session) {
-      setFileName(session.fileName);
-      setEntries(session.entries);
-      setBoard(session.board);
-      setLocked(session.locked);
-      setHasWon(session.hasBingo);
-      setTheme(session.theme);
-      applyTheme(session.theme);
-    } else {
-      handleLoadEntries();
-    }
+    handleLoadEntries();
 
     setHydrated(true);
   }, [handleLoadEntries]);
-
-  useEffect(() => {
-    if (!hydrated) {
-      return;
-    }
-
-    if (!entries || !board) {
-      saveSessionState(null);
-      return;
-    }
-
-    saveSessionState({
-      fileName: fileName ?? "entries.json",
-      entries,
-      board,
-      locked,
-      hasBingo: hasWon,
-      theme,
-    });
-  }, [hydrated, fileName, entries, board, locked, hasWon, theme]);
 
   const winningLine =
     board && locked ? getWinningLineIndexes(board.marked) : [];
