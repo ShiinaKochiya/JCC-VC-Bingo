@@ -167,7 +167,7 @@ export default function HomePage() {
           <div>
             <h1 className="text-2xl font-bold sm:text-3xl">JCC VC Bingo</h1>
             <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
-              A ready-made bingo board loads automatically from the local entries file.
+              JCC VC Bingo board (Not targeted at Meomeo frfr), made by le one and only, Shiina/Viet Hung
             </p>
           </div>
           <ThemeSwitcher theme={theme} onChange={handleThemeChange} />
