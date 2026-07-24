@@ -3,9 +3,9 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { BingoBoard } from "@/components/BingoBoard";
 import { CongratsBanner } from "@/components/CongratsBanner";
-import { FileUpload } from "@/components/FileUpload";
 import { ThemeSwitcher } from "@/components/ThemeSwitcher";
 import { Toolbar } from "@/components/Toolbar";
+import entriesData from "@/lib/entries.json";
 import {
   createBoard,
   createLockedMarkedState,
@@ -51,17 +51,15 @@ export default function HomePage() {
     [],
   );
 
-  const handleLoadSample = useCallback(async () => {
-    const response = await fetch("/sample.json");
-    const text = await response.text();
-    const result = parseBingoJson(text);
+  const handleLoadEntries = useCallback(() => {
+    const result = parseBingoJson(JSON.stringify(entriesData));
 
     if (!result.ok) {
       setError(result.error);
       return;
     }
 
-    initializeBoard(result.data.entries, "sample.json");
+    initializeBoard(result.data.entries, "entries.json");
   }, [initializeBoard]);
 
   useEffect(() => {
@@ -79,11 +77,11 @@ export default function HomePage() {
       setTheme(session.theme);
       applyTheme(session.theme);
     } else {
-      void handleLoadSample();
+      handleLoadEntries();
     }
 
     setHydrated(true);
-  }, [handleLoadSample]);
+  }, [handleLoadEntries]);
 
   useEffect(() => {
     if (!hydrated) {
@@ -113,18 +111,6 @@ export default function HomePage() {
     applyTheme(nextTheme);
     storeTheme(nextTheme);
   };
-
-  const handleFileSelect = useCallback(async (file: File) => {
-    const text = await file.text();
-    const result = parseBingoJson(text);
-
-    if (!result.ok) {
-      setError(result.error);
-      return;
-    }
-
-    initializeBoard(result.data.entries, file.name);
-  }, [initializeBoard]);
 
   const handleReshuffle = () => {
     if (!entries) {
@@ -213,19 +199,17 @@ export default function HomePage() {
           <div>
             <h1 className="text-2xl font-bold sm:text-3xl">JCC VC Bingo</h1>
             <p className="mt-1 text-sm" style={{ color: "var(--text-muted)" }}>
-              A ready-made bingo board loads automatically, and you can still upload your own JSON if you want.
+              A ready-made bingo board loads automatically from the local entries file.
             </p>
           </div>
           <ThemeSwitcher theme={theme} onChange={handleThemeChange} />
         </header>
 
-        <FileUpload
-          fileName={fileName}
-          error={error}
-          disabled={locked}
-          onFileSelect={handleFileSelect}
-          onLoadSample={handleLoadSample}
-        />
+        {error ? (
+          <div className="rounded-xl border border-red-300 bg-red-50 px-3 py-2 text-sm text-red-700">
+            {error}
+          </div>
+        ) : null}
 
         {board && (
           <>
